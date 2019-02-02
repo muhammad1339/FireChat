@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "893172980148",
+    "firebase_url": "https://fir-messenger-9b009.firebaseio.com",
+    "project_id": "fir-messenger-9b009",
+    "storage_bucket": "fir-messenger-9b009.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893172980148:android:1df4c0bd851dbe11",
+        "android_client_info": {
+          "package_name": "com.prodev.firechat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893172980148-4ulqr0ov0t04iv172ssbt61sd57cui0l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.prodev.firechat",
+            "certificate_hash": "3364dd596cad08353bbe436d8e685f5ffa3fead6"
+          }
+        },
+        {
+          "client_id": "893172980148-146ml4jvi7hh9qhppd5s3h7jg0pkh884.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrm8tb3whL-8VvH6X0ZyFTrdNogk8qmVQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893172980148-146ml4jvi7hh9qhppd5s3h7jg0pkh884.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
