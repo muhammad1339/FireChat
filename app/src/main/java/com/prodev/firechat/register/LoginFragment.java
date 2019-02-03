@@ -20,16 +20,19 @@ public class LoginFragment extends Fragment {
     private TextInputEditText etLoginPassword;
     private Button btnLogin;
     private Button btnCreateNewAccount;
+    private RegisterContract.ChangeViewCallback mChangeViewCallback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        mChangeViewCallback = (RegisterContract.ChangeViewCallback) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mChangeViewCallback = null;
     }
 
     @Nullable
@@ -37,6 +40,12 @@ public class LoginFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         configureView(view);
+        btnCreateNewAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mChangeViewCallback.onCreateNewAccount();
+            }
+        });
         return view;
     }
 

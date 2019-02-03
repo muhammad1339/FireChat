@@ -44,18 +44,22 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
     private TextView txtHaveAccount;
     private CircleImageView imgSelectProfile;
     private Uri mUri;
+    private RegisterContract.ChangeViewCallback mChangeViewCallback;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
         mRegisterPresenter = new RegisterPresenter(context);
+        mChangeViewCallback = (RegisterContract.ChangeViewCallback) context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        mChangeViewCallback = null;
     }
+
 
     @Nullable
     @Override
@@ -75,6 +79,12 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_ID);
+            }
+        });
+        txtHaveAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mChangeViewCallback.onHaveAccountClicked();
             }
         });
         return view;
@@ -122,10 +132,6 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
         txtHaveAccount = view.findViewById(R.id.text_view_sign_up_have_account);
     }
 
-    @Override
-    public void onHaveAccountClicked() {
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

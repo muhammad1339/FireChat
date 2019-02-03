@@ -1,6 +1,8 @@
 package com.prodev.firechat;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 public class Utils {
@@ -13,5 +15,10 @@ public class Utils {
         toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         toast.show();
 
+    }
+    public static void replaceFragment(FragmentManager fragmentManager, Fragment fragment,int layoutHolder){
+        fragmentManager.beginTransaction()
+                .replace(layoutHolder, fragment)
+                .commit();
     }
 }
