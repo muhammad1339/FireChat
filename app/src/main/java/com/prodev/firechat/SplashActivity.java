@@ -13,16 +13,19 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_splash);
-        if (FirebaseAuth.getInstance().getUid() == null) {
-            Intent intentRegister = new Intent(this, RegisterActivity.class);
-            intentRegister.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        setContentView(R.layout.activity_splash);
+        final String uid = FirebaseAuth.getInstance().getUid();
+
+        if (uid == null) {
+            Intent intentRegister = new Intent(SplashActivity.this, RegisterActivity.class);
+            intentRegister.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intentRegister);
         } else {
-            Intent intentRecentMessages = new Intent(this, RecentMessagesActivity.class);
-            intentRecentMessages.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            Intent intentRecentMessages = new Intent(SplashActivity.this, RecentMessagesActivity.class);
+            intentRecentMessages.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intentRecentMessages);
         }
+
     }
 
 

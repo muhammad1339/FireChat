@@ -1,5 +1,7 @@
 package com.prodev.firechat.data;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,6 +21,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class UserRepo {
@@ -98,7 +102,7 @@ public class UserRepo {
                             }
                         } else {
                             //add here
-                            uploadUserImageProfile(imageUploadUri,user);
+                            uploadUserImageProfile(imageUploadUri, user);
                         }
                     }
 
@@ -110,7 +114,7 @@ public class UserRepo {
     }
 
 
-    public void uploadUserImageProfile(Uri uriToSave,final User user) {
+    public void uploadUserImageProfile(Uri uriToSave, final User user) {
         final DatabaseReference ref = mFirebaseDatabase.getReference("user");
         final String imageName = UUID.randomUUID().toString();
         FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
@@ -142,6 +146,29 @@ public class UserRepo {
                 });
             }
         });
+    }
+
+    public LiveData<List<User>> getAllUsers() {
+        final MutableLiveData<List<User>> userMutableLiveData = new MutableLiveData<>();
+        //get users from fire base
+        DatabaseReference reference = mFirebaseDatabase.getReference("user");
+        reference.orderByChild("userMail").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<User> userList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "\n" + snapshot.getValue(User.class).toString());
+                    userList.add(snapshot.getValue(User.class));
+                }
+                userMutableLiveData.postValue(userList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return userMutableLiveData;
     }
 
 }

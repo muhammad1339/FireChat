@@ -5,7 +5,7 @@ public interface RecentMessagesContract {
     }
 
     public interface RecentMessagesPresenter {
-        
+        void fetchRecentMessages();
     }
     public interface ChangeViewCallback{
         void onStartNewMessage();

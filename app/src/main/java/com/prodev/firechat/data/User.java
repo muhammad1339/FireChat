@@ -57,7 +57,7 @@ public class User {
                 "uid='" + uid + '\'' +
                 ", userMail='" + userMail + '\'' +
                 ", userPassword='" + userPassword + '\'' +
-                ", userImagePath='" + userImagePath + '\'' +
+                "\n, userImagePath='" + userImagePath + '\'' +
                 '}';
     }
 }

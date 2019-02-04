@@ -1,15 +1,24 @@
 package com.prodev.firechat.register;
 
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.prodev.firechat.R;
 import com.prodev.firechat.Utils;
+import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.UserRepo;
+import com.prodev.firechat.recentmessages.RecentMessagesPresenter;
+
+import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity
         implements RegisterContract.ChangeViewCallback {
+    public static final String TAG = RegisterActivity.class.getSimpleName();
     private SignUpFragment mSignUpFragment;
     private LoginFragment mLoginFragment;
     private FragmentManager mFragmentManager;
@@ -19,6 +28,14 @@ public class RegisterActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        new UserRepo().getAllUsers().observe(this, new Observer<List<User>>() {
+            @Override
+            public void onChanged(@Nullable List<User> users) {
+                for (User user : users) {
+                    Log.d(TAG, "onChanged: " + user.toString());
+                }
+            }
+        });
         mFragmentManager = getSupportFragmentManager();
         mSignUpFragment = new SignUpFragment();
         mLoginFragment = new LoginFragment();
