@@ -1,14 +1,14 @@
-package com.prodev.firechat.newmessage;
+package com.prodev.firechat.chat;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.prodev.firechat.R;
 
-public class NewMessageActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_message);
+        setContentView(R.layout.activity_chat);
     }
 }

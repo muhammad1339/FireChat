@@ -11,6 +11,7 @@ import com.prodev.firechat.Utils;
 import com.prodev.firechat.data.User;
 import com.prodev.firechat.data.UserRepo;
 import com.prodev.firechat.register.RegisterActivity;
+import com.prodev.firechat.users.UserListActivity;
 
 public class RecentMessagesActivity extends AppCompatActivity implements RecentMessagesContract.ChangeViewCallback {
 
@@ -37,7 +38,8 @@ public class RecentMessagesActivity extends AppCompatActivity implements RecentM
     @Override
     public void onStartNewMessage() {
         //load list of users
-
+        Intent intent = new Intent(this, UserListActivity.class);
+        startActivity(intent);
     }
 
 }

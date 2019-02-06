@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".recentmessages.RecentMessagesActivity" />
         <activity android:name=".register.RegisterActivity" />
-        <activity android:name=".newmessage.NewMessageActivity" />
+        <activity android:name=".chat.ChatActivity" />
         <activity android:name=".users.UserListActivity"></activity>
     </application>
 
