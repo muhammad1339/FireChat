@@ -6,14 +6,22 @@ import com.prodev.firechat.BasePresenter;
 import com.prodev.firechat.BaseView;
 
 public interface RegisterContract {
-    interface RegisterView {
-
+    interface RegisterViewSignUp {
+        void onSignUpComplete();
     }
 
-    interface RegisterPresenter {
+    interface RegisterViewLogin {
+        void onLoginComplete();
+    }
+
+    interface SignUpPresenter {
 
         void saveUser(String uid, String userMail, String password, Uri imagePath);
+    }
 
+    interface LoginPresenter {
+
+        void userLogin(String userMail, String password);
     }
 
     interface ChangeViewCallback {

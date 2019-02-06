@@ -2,10 +2,8 @@ package com.prodev.firechat.register;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
@@ -17,25 +15,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.prodev.firechat.R;
 import com.prodev.firechat.Utils;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class SignUpFragment extends Fragment implements RegisterContract.RegisterView {
+public class SignUpFragment extends Fragment implements RegisterContract.RegisterViewSignUp {
     public static final int CAMERA_ID = 0;
     public static final int GALLERY_ID = 1;
     public static final String TAG = SignUpFragment.class.getSimpleName();
-    private RegisterPresenter mRegisterPresenter;
+    private SignUpPresenter mSignUpPresenter;
     private Context mContext;
     private TextInputEditText etSignUpEmail;
     private TextInputEditText etSignUpPassword;
@@ -50,7 +45,7 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-        mRegisterPresenter = new RegisterPresenter(context);
+        mSignUpPresenter = new SignUpPresenter(this);
         mChangeViewCallback = (RegisterContract.ChangeViewCallback) context;
     }
 
@@ -67,26 +62,13 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
         configureView(view);
 
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                collectUserData();
-            }
+        btnSignUp.setOnClickListener(view1 -> collectUserData());
+        imgSelectProfile.setOnClickListener(view12 -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(intent, GALLERY_ID);
         });
-        imgSelectProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, GALLERY_ID);
-            }
-        });
-        txtHaveAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mChangeViewCallback.onHaveAccountClicked();
-            }
-        });
+        txtHaveAccount.setOnClickListener(view13 -> mChangeViewCallback.onHaveAccountClicked());
         return view;
     }
 
@@ -119,7 +101,7 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
             Utils.showToast(mContext, msg);
             return;
         }
-        mRegisterPresenter.saveUser("", userMail
+        mSignUpPresenter.saveUser("", userMail
                 , userPassword, mUri);
     }
 
@@ -145,5 +127,12 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
             }
         }
 
+    }
+
+    @Override
+    public void onSignUpComplete() {
+        Intent intent = new Intent(mContext, RecentMessagesActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

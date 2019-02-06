@@ -28,14 +28,7 @@ public class RegisterActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        new UserRepo().getAllUsers().observe(this, new Observer<List<User>>() {
-            @Override
-            public void onChanged(@Nullable List<User> users) {
-                for (User user : users) {
-                    Log.d(TAG, "onChanged: " + user.toString());
-                }
-            }
-        });
+
         mFragmentManager = getSupportFragmentManager();
         mSignUpFragment = new SignUpFragment();
         mLoginFragment = new LoginFragment();
