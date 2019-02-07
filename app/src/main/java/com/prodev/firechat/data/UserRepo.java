@@ -135,6 +135,7 @@ public class UserRepo {
                 List<User> userList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Log.d(TAG, "\n" + snapshot.getValue(User.class).toString());
+                    Log.d(TAG, "\n" + snapshot.getValue().toString());
                     userList.add(snapshot.getValue(User.class));
                 }
                 userMutableLiveData.postValue(userList);

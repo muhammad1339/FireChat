@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.prodev.firechat.R;
 import com.prodev.firechat.chat.ChatActivity;
@@ -14,7 +15,7 @@ import com.prodev.firechat.data.User;
 import java.util.List;
 
 public class UserListActivity extends AppCompatActivity implements UserListContract.UserListView {
-
+    public static final String TAG = UserListActivity.class.getSimpleName();
     private RecyclerView mRecyclerViewUserList;
     private UserListPresenter mPresenter;
     private List<User> userList;
@@ -46,9 +47,11 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
     @Override
     public void onUserItemClicked(int position) {
         User user = userList.get(position);
+        Log.d(TAG, "onUserItemClicked: " + user.toString());
         Intent intent = new Intent(this, ChatActivity.class);
         // pass current clicked user Id or user to chat activity
-        intent.putExtra("userID", user.getUid());
+        intent.putExtra("toID", user.getUid());
+        intent.putExtra("toEmail", user.getUserMail());
         startActivity(intent);
     }
 }

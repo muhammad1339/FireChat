@@ -18,6 +18,17 @@ public class Chat {
         this.timeStamp = timeStamp;
     }
 
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "msgID='" + msgID + '\'' +
+                ", fromID='" + fromID + '\'' +
+                ", toID='" + toID + '\'' +
+                ", msgContent='" + msgContent + '\'' +
+                ", timeStamp=" + timeStamp +
+                '}';
+    }
+
     public String getMsgID() {
         return msgID;
     }
