@@ -41,7 +41,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder viewHolder = null;
-        Chat chat = chatList.get(i);
         int type = getItemViewType(i);
         switch (type) {
             case FROM_TYPE:
