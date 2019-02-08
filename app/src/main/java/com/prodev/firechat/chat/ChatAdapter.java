@@ -40,7 +40,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             if (uid.equals(chat.getFromID())) {
                 View fromView = inflater.inflate(R.layout.chat_from_item_layout
                         , parent, false);
-                viewHolder =  new FromUserView(fromView);
+                viewHolder = new FromUserView(fromView);
             } else {
                 View toView = inflater.inflate(R.layout.chat_to_item_layout
                         , parent, false);
@@ -51,17 +51,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int i) {
-        if (chatList.size() > 0) {
-            Chat chat = chatList.get(i);
-            Log.d(TAG, "onBindViewHolder: " + chat.toString());
-            if (uid.equals(chat.getFromID())) {
-                FromUserView fromUserView = (FromUserView) holder;
-                fromUserView.setTextViewFromMessage(chat.getMsgContent());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        Chat chat = chatList.get(position);
+        if (uid.equals(chat.getFromID())) {
+            RecyclerView.ViewHolder fromVH = holder;
+            if (holder instanceof ToUserView) {
+                Log.d(TAG, "\nfromVH ClassCastException\n"
+                        + holder.toString());
             } else {
-                ToUserView toUserView = (ToUserView) holder;
+                FromUserView fromUserView = (FromUserView) fromVH;
+                fromUserView.setTextViewFromMessage(chat.getMsgContent());
+            }
+        } else {
+            if (holder instanceof FromUserView) {
+                Log.d(TAG, "\ntoVH ClassCastException\n"
+                        + holder.toString());
+            } else {
+                RecyclerView.ViewHolder toVH = holder;
+                ToUserView toUserView = (ToUserView) toVH;
                 toUserView.setTextViewToMessage(chat.getMsgContent());
             }
+
         }
     }
 
