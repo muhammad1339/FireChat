@@ -32,19 +32,19 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        LayoutInflater inflater = LayoutInflater.from(mContext);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder viewHolder = null;
         if (chatList.size() > 0) {
             Chat chat = chatList.get(i);
             if (uid.equals(chat.getFromID())) {
                 View fromView = inflater.inflate(R.layout.chat_from_item_layout
-                        , viewGroup, false);
-                viewHolder =  new ToUserView(fromView);
+                        , parent, false);
+                viewHolder =  new FromUserView(fromView);
             } else {
                 View toView = inflater.inflate(R.layout.chat_to_item_layout
-                        , viewGroup, false);
-                viewHolder = new FromUserView(toView);
+                        , parent, false);
+                viewHolder = new ToUserView(toView);
             }
         }
         return viewHolder;
@@ -56,11 +56,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             Chat chat = chatList.get(i);
             Log.d(TAG, "onBindViewHolder: " + chat.toString());
             if (uid.equals(chat.getFromID())) {
-                ToUserView toUserView = (ToUserView) holder;
-                toUserView.setTextViewToMessage(chat.getMsgContent());
-            } else {
                 FromUserView fromUserView = (FromUserView) holder;
                 fromUserView.setTextViewFromMessage(chat.getMsgContent());
+            } else {
+                ToUserView toUserView = (ToUserView) holder;
+                toUserView.setTextViewToMessage(chat.getMsgContent());
             }
         }
     }
