@@ -22,6 +22,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Chat> chatList;
     private Context mContext;
     private String uid;
+    public static final int FROM_TYPE = 0;
+    public static final int TO_TYPE = 1;
 
     public ChatAdapter(Context context, List<Chat> chatList) {
         this.chatList = chatList;
@@ -29,23 +31,28 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         uid = FirebaseAuth.getInstance().getUid();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return uid.equals(chatList.get(position).getFromID()) ? FROM_TYPE : TO_TYPE;
+    }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         RecyclerView.ViewHolder viewHolder = null;
-        if (chatList.size() > 0) {
-            Chat chat = chatList.get(i);
-            if (uid.equals(chat.getFromID())) {
+        Chat chat = chatList.get(i);
+        int type = getItemViewType(i);
+        switch (type) {
+            case FROM_TYPE:
                 View fromView = inflater.inflate(R.layout.chat_from_item_layout
                         , parent, false);
                 viewHolder = new FromUserView(fromView);
-            } else {
+                break;
+            case TO_TYPE:
                 View toView = inflater.inflate(R.layout.chat_to_item_layout
                         , parent, false);
                 viewHolder = new ToUserView(toView);
-            }
         }
         return viewHolder;
     }
@@ -53,26 +60,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Chat chat = chatList.get(position);
-        if (uid.equals(chat.getFromID())) {
-            RecyclerView.ViewHolder fromVH = holder;
-            if (holder instanceof ToUserView) {
-                Log.d(TAG, "\nfromVH ClassCastException\n"
-                        + holder.toString());
-            } else {
-                FromUserView fromUserView = (FromUserView) fromVH;
-                fromUserView.setTextViewFromMessage(chat.getMsgContent());
-            }
-        } else {
-            if (holder instanceof FromUserView) {
-                Log.d(TAG, "\ntoVH ClassCastException\n"
-                        + holder.toString());
-            } else {
-                RecyclerView.ViewHolder toVH = holder;
-                ToUserView toUserView = (ToUserView) toVH;
-                toUserView.setTextViewToMessage(chat.getMsgContent());
-            }
-
+        int type = holder.getItemViewType();
+        switch (type) {
+            case FROM_TYPE:
+                if (holder instanceof ToUserView) {
+                    Log.d(TAG, "\nfromVH ClassCastException\n"
+                            + holder.toString());
+                } else {
+                    FromUserView fromUserView = FromUserView.class.cast(holder);
+                    fromUserView.setTextViewFromMessage(chat.getMsgContent());
+                }
+                break;
+            case TO_TYPE:
+                if (holder instanceof FromUserView) {
+                    Log.d(TAG, "\ntoVH ClassCastException\n"
+                            + holder.toString());
+                } else {
+                    ToUserView toUserView = ToUserView.class.cast(holder);
+                    toUserView.setTextViewToMessage(chat.getMsgContent());
+                }
         }
+
     }
 
     @Override
