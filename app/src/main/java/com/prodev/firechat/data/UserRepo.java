@@ -31,10 +31,12 @@ public class UserRepo {
     private Uri imageUploadUri;
     private UserRepoCallback.UserRepoSignUpCallback repoSignUpCallback;
     private UserRepoCallback.UserRepoLoginCallback repoLoginCallback;
+
     public UserRepo() {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
     }
+
     public UserRepo(SignUpPresenter presenter) {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -133,10 +135,11 @@ public class UserRepo {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<User> userList = new ArrayList<>();
+                String uid = FirebaseAuth.getInstance().getUid();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "\n" + snapshot.getValue(User.class).toString());
-                    Log.d(TAG, "\n" + snapshot.getValue().toString());
-                    userList.add(snapshot.getValue(User.class));
+                    User user = snapshot.getValue(User.class);
+                    if (!uid.equals(user.getUid()))
+                        userList.add(user);
                 }
                 userMutableLiveData.postValue(userList);
             }

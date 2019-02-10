@@ -17,7 +17,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder> {
     public static final String TAG = ChatAdapter.class.getSimpleName();
     private List<Chat> chatList;
     private Context mContext;
@@ -33,31 +33,38 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return uid.equals(chatList.get(position).getFromID()) ? FROM_TYPE : TO_TYPE;
+        Chat chat = chatList.get(position);
+        String userID = chat.getFromID();
+        return uid.equals(userID) ? FROM_TYPE : TO_TYPE;
     }
 
+    /**
+     * the error was cause because misunderstand to the param of this method
+     * i was thinking its a position but it is a view type
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        RecyclerView.ViewHolder viewHolder = null;
-        int type = getItemViewType(i);
-        switch (type) {
+        switch (viewType) {
             case FROM_TYPE:
                 View fromView = inflater.inflate(R.layout.chat_from_item_layout
                         , parent, false);
-                viewHolder = new FromUserView(fromView);
-                break;
+                return new FromUserView(fromView);
+
             case TO_TYPE:
                 View toView = inflater.inflate(R.layout.chat_to_item_layout
                         , parent, false);
-                viewHolder = new ToUserView(toView);
+                return new ToUserView(toView);
         }
-        return viewHolder;
+        return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BaseViewHolder holder, int position) {
         Chat chat = chatList.get(position);
         int type = holder.getItemViewType();
         switch (type) {
@@ -66,7 +73,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Log.d(TAG, "\nfromVH ClassCastException\n"
                             + holder.toString());
                 } else {
-                    FromUserView fromUserView = FromUserView.class.cast(holder);
+                    FromUserView fromUserView = (FromUserView) holder;
                     fromUserView.setTextViewFromMessage(chat.getMsgContent());
                 }
                 break;
@@ -75,11 +82,11 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Log.d(TAG, "\ntoVH ClassCastException\n"
                             + holder.toString());
                 } else {
-                    ToUserView toUserView = ToUserView.class.cast(holder);
+                    ToUserView toUserView = (ToUserView) holder;
                     toUserView.setTextViewToMessage(chat.getMsgContent());
-                }
         }
-
+                break;
+        }
     }
 
     @Override
@@ -87,7 +94,15 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return chatList.size();
     }
 
-    public static class FromUserView extends RecyclerView.ViewHolder {
+    //this is not necessary it can be done without it
+    static class BaseViewHolder extends RecyclerView.ViewHolder {
+
+        public BaseViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
+    static class FromUserView extends BaseViewHolder {
         private CircleImageView imageViewFromProfile;
         private TextView textViewFromMessage;
 
@@ -100,10 +115,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void setTextViewFromMessage(String msg) {
             if (textViewFromMessage != null)
                 textViewFromMessage.setText(msg);
+            else
+                Log.d(TAG, "setTextViewFromMessage: NULL");
         }
     }
 
-    public static class ToUserView extends RecyclerView.ViewHolder {
+    static class ToUserView extends BaseViewHolder {
         private CircleImageView imageViewToProfile;
         private TextView textViewToMessage;
 
@@ -116,6 +133,8 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         void setTextViewToMessage(String msg) {
             if (textViewToMessage != null)
                 textViewToMessage.setText(msg);
+            else
+                Log.e(TAG, "setTextViewToMessage: NULL");
         }
 
     }
