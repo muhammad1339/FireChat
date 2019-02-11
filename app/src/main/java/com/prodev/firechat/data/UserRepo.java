@@ -2,6 +2,7 @@ package com.prodev.firechat.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.prodev.firechat.Constant;
+import com.prodev.firechat.PrefManager;
 import com.prodev.firechat.register.LoginPresenter;
 import com.prodev.firechat.register.SignUpPresenter;
 
@@ -31,19 +33,22 @@ public class UserRepo {
     private Uri imageUploadUri;
     private UserRepoCallback.UserRepoSignUpCallback repoSignUpCallback;
     private UserRepoCallback.UserRepoLoginCallback repoLoginCallback;
+    private Context mContext;
 
     public UserRepo() {
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
     }
 
-    public UserRepo(SignUpPresenter presenter) {
+    public UserRepo(SignUpPresenter presenter, Context context) {
+        mContext = context;
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         repoSignUpCallback = (UserRepoCallback.UserRepoSignUpCallback) presenter;
     }
 
-    public UserRepo(LoginPresenter presenter) {
+    public UserRepo(LoginPresenter presenter, Context context) {
+        mContext = context;
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         repoLoginCallback = (UserRepoCallback.UserRepoLoginCallback) presenter;
@@ -114,6 +119,7 @@ public class UserRepo {
             taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
                 Log.d(TAG, "onSuccess: " + uri.toString());
                 user.setUserImagePath(uri.toString());
+                PrefManager.savePref(user, mContext, Constant.USER_NODE);
                 if (uri != null) {
                     ref.push().setValue(user)
                             .addOnSuccessListener(aVoid -> Log.d(TAG, "isUserAlreadyExist-onSuccess: ")).addOnFailureListener(new OnFailureListener() {
@@ -152,4 +158,7 @@ public class UserRepo {
         return userMutableLiveData;
     }
 
+    public User getCurrentUser() {
+        return PrefManager.getUserObject(mContext, Constant.USER_NODE);
+    }
 }

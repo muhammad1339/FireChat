@@ -15,7 +15,7 @@ public class SignUpPresenter
 
     public SignUpPresenter(SignUpFragment fragment) {
         mRegisterViewSignUp = fragment;
-        this.mRepo = new UserRepo(this);
+        this.mRepo = new UserRepo(this,fragment.getContext());
     }
 
     @Override

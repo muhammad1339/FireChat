@@ -52,6 +52,7 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
         // pass current clicked user Id or user to chat activity
         intent.putExtra("toID", user.getUid());
         intent.putExtra("toEmail", user.getUserMail());
+        intent.putExtra("toImageUrl",user.getUserImagePath());
         startActivity(intent);
     }
 }

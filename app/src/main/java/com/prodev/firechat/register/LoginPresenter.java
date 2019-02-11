@@ -16,7 +16,7 @@ public class LoginPresenter
 
     public LoginPresenter(LoginFragment fragment) {
         mRegisterViewLogin = fragment;
-        this.mRepo = new UserRepo(this);
+        this.mRepo = new UserRepo(this,fragment.getContext());
     }
 
     @Override
