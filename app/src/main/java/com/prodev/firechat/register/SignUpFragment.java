@@ -40,6 +40,7 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
     private CircleImageView imgSelectProfile;
     private Uri mUri;
     private RegisterContract.ChangeViewCallback mChangeViewCallback;
+    private View loadingView;
 
     @Override
     public void onAttach(Context context) {
@@ -78,22 +79,27 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
         String userPasswordConfirm = etSignUpPasswordConfirm.getText().toString();
         if (TextUtils.isEmpty(userMail)) {
             String msg = "User Email Can't be Empty";
-            Utils.showToast(mContext, msg);
+            etSignUpEmail.setError(msg);
             return;
         }
         if (TextUtils.isEmpty(userPassword)) {
             String msg = "User Password Can't be Empty";
-            Utils.showToast(mContext, msg);
+            etSignUpPassword.setError(msg);
             return;
         }
         if (TextUtils.isEmpty(userPasswordConfirm)) {
             String msg = "userPasswordConfirm Can't be Empty";
-            Utils.showToast(mContext, msg);
+            etSignUpPasswordConfirm.setError(msg);
             return;
         }
         if (!userPassword.equals(userPasswordConfirm)) {
             String msg = "userPassword doesn't match";
-            Utils.showToast(mContext, msg);
+            etSignUpPasswordConfirm.setError(msg);
+            return;
+        }
+        if (userPassword.length() < 6) {
+            String msg = "Password should be 6 characters at least";
+            etSignUpPassword.setError(msg);
             return;
         }
         if (mUri == null) {
@@ -106,6 +112,7 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
     }
 
     private void configureView(View view) {
+        loadingView = view.findViewById(R.id.sign_up_loading_layout);
         imgSelectProfile = view.findViewById(R.id.select_profile_image);
         etSignUpEmail = view.findViewById(R.id.edit_text_sign_up_email);
         etSignUpPassword = view.findViewById(R.id.edit_text_sign_up_password);
@@ -134,5 +141,21 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
         Intent intent = new Intent(mContext, RecentMessagesActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSignUpFailure(String message) {
+        etSignUpEmail.setError(message);
+        loadingView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onStartLoading() {
+        loadingView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onEndLoading() {
+        loadingView.setVisibility(View.GONE);
     }
 }

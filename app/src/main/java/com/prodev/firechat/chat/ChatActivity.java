@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.support.v7.widget.Toolbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.prodev.firechat.Constant;
@@ -17,7 +17,6 @@ import com.prodev.firechat.PrefManager;
 import com.prodev.firechat.R;
 import com.prodev.firechat.Utils;
 import com.prodev.firechat.data.Chat;
-import com.prodev.firechat.data.ChatRepo;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +33,7 @@ public class ChatActivity
     private String toID;
     private String fromID;
     private String toImageUrl;
+    private String toEmail;
 
     @Override
     protected void onStart() {
@@ -51,6 +51,11 @@ public class ChatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         configureView();
+        Intent intent = getIntent();
+        toEmail = intent.getStringExtra("toEmail");
+        Toolbar toolbar = findViewById(R.id.chat_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(toEmail);
         long timeStamp = System.currentTimeMillis();
         Date date = new Date(timeStamp);
         Log.d(TAG, "onCreate: " + date.toString());

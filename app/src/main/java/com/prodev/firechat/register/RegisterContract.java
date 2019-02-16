@@ -8,10 +8,22 @@ import com.prodev.firechat.BaseView;
 public interface RegisterContract {
     interface RegisterViewSignUp {
         void onSignUpComplete();
+
+        void onSignUpFailure(String message);
+
+        void onStartLoading();
+
+        void onEndLoading();
     }
 
     interface RegisterViewLogin {
         void onLoginComplete();
+
+        void onSignUpFailure(String message);
+
+        void onStartLoading();
+
+        void onEndLoading();
     }
 
     interface SignUpPresenter {

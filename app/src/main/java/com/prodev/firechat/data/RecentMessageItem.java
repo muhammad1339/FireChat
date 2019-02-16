@@ -1,4 +1,5 @@
 package com.prodev.firechat.data;
 
-public class UserItem {
+public class RecentMessageItem {
+
 }

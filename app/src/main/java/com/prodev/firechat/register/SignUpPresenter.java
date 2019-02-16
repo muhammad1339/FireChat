@@ -15,12 +15,27 @@ public class SignUpPresenter
 
     public SignUpPresenter(SignUpFragment fragment) {
         mRegisterViewSignUp = fragment;
-        this.mRepo = new UserRepo(this,fragment.getContext());
+        this.mRepo = new UserRepo(this, fragment.getContext());
     }
 
     @Override
     public void onSignUpSuccess() {
         mRegisterViewSignUp.onSignUpComplete();
+    }
+
+    @Override
+    public void onSignUpFailure(String message) {
+        mRegisterViewSignUp.onSignUpFailure(message);
+    }
+
+    @Override
+    public void onStartLoading() {
+        mRegisterViewSignUp.onStartLoading();
+    }
+
+    @Override
+    public void onEndLoading() {
+        mRegisterViewSignUp.onEndLoading();
     }
 
     @Override

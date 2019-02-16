@@ -26,6 +26,7 @@ public class LoginFragment extends Fragment implements RegisterContract.Register
     private Button btnCreateNewAccount;
     private RegisterContract.ChangeViewCallback mChangeViewCallback;
     private LoginPresenter mPresenter;
+    private View mLoginLoadingView;
 
     @Override
     public void onAttach(Context context) {
@@ -58,19 +59,20 @@ public class LoginFragment extends Fragment implements RegisterContract.Register
         etLoginPassword = view.findViewById(R.id.edit_text_login_password);
         btnLogin = view.findViewById(R.id.button_login);
         btnCreateNewAccount = view.findViewById(R.id.button_create_new_account);
+        mLoginLoadingView = view.findViewById(R.id.login_loading_layout);
     }
 
     private void collectData() {
         String userMail = etLoginEmail.getText().toString();
         String userPassword = etLoginPassword.getText().toString();
         if (TextUtils.isEmpty(userMail)) {
-            String msg = "User Email Can't be Empty";
-            Utils.showToast(mContext, msg);
+            String message = "User Email Can't be Empty";
+            etLoginEmail.setError(message);
             return;
         }
         if (TextUtils.isEmpty(userPassword)) {
-            String msg = "User Password Can't be Empty";
-            Utils.showToast(mContext, msg);
+            String message = "User Password Can't be Empty";
+            etLoginPassword.setError(message);
             return;
         }
 
@@ -82,5 +84,21 @@ public class LoginFragment extends Fragment implements RegisterContract.Register
         Intent intent = new Intent(mContext, RecentMessagesActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onSignUpFailure(String message) {
+        mLoginLoadingView.setVisibility(View.GONE);
+        etLoginEmail.setError(message);
+    }
+
+    @Override
+    public void onStartLoading() {
+        mLoginLoadingView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onEndLoading() {
+        mLoginLoadingView.setVisibility(View.GONE);
     }
 }

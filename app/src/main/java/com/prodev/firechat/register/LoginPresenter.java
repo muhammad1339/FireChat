@@ -16,12 +16,27 @@ public class LoginPresenter
 
     public LoginPresenter(LoginFragment fragment) {
         mRegisterViewLogin = fragment;
-        this.mRepo = new UserRepo(this,fragment.getContext());
+        this.mRepo = new UserRepo(this, fragment.getContext());
     }
 
     @Override
     public void onLoginSuccess() {
         mRegisterViewLogin.onLoginComplete();
+    }
+
+    @Override
+    public void onLoginFailure(String message) {
+        mRegisterViewLogin.onSignUpFailure(message);
+    }
+
+    @Override
+    public void onStartLoading() {
+        mRegisterViewLogin.onStartLoading();
+    }
+
+    @Override
+    public void onEndLoading() {
+        mRegisterViewLogin.onEndLoading();
     }
 
     @Override

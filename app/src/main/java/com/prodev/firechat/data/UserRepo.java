@@ -56,6 +56,7 @@ public class UserRepo {
 
     public void signUpWithEmailAndPassword(final User user, Uri imagePath) {
         this.imageUploadUri = imagePath;
+        repoSignUpCallback.onStartLoading();
         mAuth.createUserWithEmailAndPassword(user.getUserMail(), user.getUserPassword())
                 .addOnCompleteListener(task -> Log.d(TAG, "signUpWithEmailAndPassword-onComplete: " + task.isComplete()))
                 .addOnSuccessListener(authResult -> {
@@ -65,47 +66,35 @@ public class UserRepo {
                     storeUserWithEmailAndPassword(user);
                     // notify presenter to change view
                     repoSignUpCallback.onSignUpSuccess();
+                    repoSignUpCallback.onEndLoading();
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "signUpWithEmailAndPassword-onFailure: " + e.getMessage()));
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "signUpWithEmailAndPassword-onFailure: " + e.getMessage());
+                    repoSignUpCallback.onSignUpFailure(e.getMessage());
+                    repoSignUpCallback.onEndLoading();
+                });
     }
 
     public void loginUserWithEmailAndPassword(User user) {
+        repoLoginCallback.onStartLoading();
         mAuth.signInWithEmailAndPassword(user.getUserMail(), user.getUserPassword())
                 .addOnCompleteListener(task -> Log.d(TAG, "loginUserWithEmailAndPassword-onComplete: " + task.isComplete()))
                 .addOnSuccessListener(authResult -> {
                     Log.d(TAG, "loginUserWithEmailAndPassword-onSuccess: " + authResult.getUser().getUid());
                     // notify presenter to change view
                     repoLoginCallback.onLoginSuccess();
+                    repoLoginCallback.onEndLoading();
+                    getUserWithEmail(user.getUserMail());
                 })
-                .addOnFailureListener(e -> Log.d(TAG, "loginUserWithEmailAndPassword-onFailure: " + e.getMessage()));
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "loginUserWithEmailAndPassword-onFailure: " + e.getMessage());
+                    repoLoginCallback.onLoginFailure(e.getMessage());
+                    repoLoginCallback.onEndLoading();
+                });
     }
 
     public void storeUserWithEmailAndPassword(User user) {
-        isUserAlreadyExist(user);
-    }
-
-    public void isUserAlreadyExist(final User user) {
-        final DatabaseReference ref = mFirebaseDatabase.getReference(Constant.USER_NODE);
-        ref.orderByChild("userMail").equalTo(user.getUserMail())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            Log.d(TAG, "isUserAlreadyExist-onDataChange: ");
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Log.d(TAG, "isUserAlreadyExist-for- onDataChange: " + snapshot.getValue(User.class).toString());
-                            }
-                        } else {
-                            //add here
-                            uploadUserImageProfile(imageUploadUri, user);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.d(TAG, "isUserAlreadyExist-onCancelled: " + databaseError.getDetails());
-                    }
-                });
+        uploadUserImageProfile(imageUploadUri, user);
     }
 
 
@@ -116,18 +105,14 @@ public class UserRepo {
         StorageReference images = firebaseStorage.getReference("images/" + imageName);
         images.putFile(uriToSave).addOnSuccessListener(taskSnapshot -> {
             Log.d(TAG, "onSuccess: " + taskSnapshot.getMetadata().getPath());
-            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(uri -> {
+            taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener((Uri uri) -> {
                 Log.d(TAG, "onSuccess: " + uri.toString());
                 user.setUserImagePath(uri.toString());
                 PrefManager.savePref(user, mContext, Constant.USER_NODE);
                 if (uri != null) {
                     ref.push().setValue(user)
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "isUserAlreadyExist-onSuccess: ")).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "isUserAlreadyExist-onFailure: " + e.getMessage());
-                        }
-                    });
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "isUserAlreadyExist-onSuccess: "))
+                            .addOnFailureListener(e -> Log.d(TAG, "isUserAlreadyExist-onFailure: " + e.getMessage()));
                 }
             });
         });
@@ -156,6 +141,28 @@ public class UserRepo {
             }
         });
         return userMutableLiveData;
+    }
+
+    private void getUserWithEmail(String email) {
+        DatabaseReference reference = mFirebaseDatabase.getReference(Constant.USER_NODE);
+        reference.orderByChild("userMail")
+                .equalTo(email)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User user = snapshot.getValue(User.class);
+                            Log.d(TAG, "getUserWithEmail-onDataChange:\n " +
+                                    user.toString());
+                            PrefManager.savePref(user, mContext, Constant.USER_NODE);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(TAG, "getUserWithEmail-onCancelled:\n " + databaseError.getDetails());
+                    }
+                });
     }
 
     public User getCurrentUser() {
