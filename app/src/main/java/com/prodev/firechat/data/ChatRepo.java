@@ -24,22 +24,39 @@ public class ChatRepo {
     }
 
     public void storeUserChat(Chat chat) {
-        final DatabaseReference reference = mFirebaseDatabase.getReference(Constant.CHAT_NODE)
+        final DatabaseReference fromRef = mFirebaseDatabase.getReference(Constant.CHAT_NODE)
                 .child(chat.getFromID())
                 .child(chat.getToID()).push();
-        final DatabaseReference toReference = mFirebaseDatabase.getReference(Constant.CHAT_NODE)
+        final DatabaseReference toRef = mFirebaseDatabase.getReference(Constant.CHAT_NODE)
                 .child(chat.getToID())
                 .child(chat.getFromID()).push();
-        chat.setMsgID(reference.getKey());
-        reference.setValue(chat).addOnSuccessListener(aVoid -> {
+        chat.setMsgID(fromRef.getKey());
+        fromRef.setValue(chat).addOnSuccessListener(aVoid -> {
             Log.d(TAG, "storeUserChat: ");
         }).addOnFailureListener(Throwable::printStackTrace);
-        toReference.setValue(chat).addOnSuccessListener(aVoid -> {
+        toRef.setValue(chat).addOnSuccessListener(aVoid -> {
             Log.d(TAG, "storeUserChat: ");
+        }).addOnFailureListener(Throwable::printStackTrace);
+        storeRecentUserChat(chat);
+    }
+
+    private void storeRecentUserChat(Chat chat) {
+        final DatabaseReference fromRef = mFirebaseDatabase.getReference(Constant.RECENT_MESSAGE_NODE)
+                .child(chat.getFromID())
+                .child(chat.getToID());
+        final DatabaseReference toRef = mFirebaseDatabase.getReference(Constant.RECENT_MESSAGE_NODE)
+                .child(chat.getToID())
+                .child(chat.getFromID());
+        chat.setMsgID(fromRef.getKey());
+        fromRef.setValue(chat).addOnSuccessListener(aVoid -> {
+            Log.d(TAG, "storeRecentUserChat: ");
+        }).addOnFailureListener(Throwable::printStackTrace);
+        toRef.setValue(chat).addOnSuccessListener(aVoid -> {
+            Log.d(TAG, "storeRecentUserChat: ");
         }).addOnFailureListener(Throwable::printStackTrace);
     }
 
-    public LiveData<List<Chat>> getChatMessages(String fromId,String toId) {
+    public LiveData<List<Chat>> getChatMessages(String fromId, String toId) {
         final MutableLiveData<List<Chat>> listMutableLiveData = new MutableLiveData<>();
         final DatabaseReference reference = mFirebaseDatabase.getReference(Constant.CHAT_NODE);
         reference.child(fromId).child(toId).addValueEventListener(new ValueEventListener() {
@@ -60,5 +77,8 @@ public class ChatRepo {
             }
         });
         return listMutableLiveData;
+    }
+    public void getRecentMessagesForCurrentUser(){
+        
     }
 }
