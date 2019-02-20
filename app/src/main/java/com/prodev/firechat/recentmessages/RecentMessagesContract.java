@@ -1,13 +1,20 @@
 package com.prodev.firechat.recentmessages;
 
+import com.prodev.firechat.data.Chat;
+import com.prodev.firechat.data.User;
+
+import java.util.List;
+import java.util.Map;
+
 public interface RecentMessagesContract {
-    public interface RecentMessagesView {
+    interface RecentMessagesView {
+        void populateRecentMessages(Map<Chat, User> chatUserMap, List<Chat> chatList);
     }
 
-    public interface RecentMessagesPresenter {
-        void fetchRecentMessages();
+    interface RecentMessagesPresenter {
     }
-    public interface ChangeViewCallback{
+
+    interface ChangeViewCallback {
         void onStartNewMessage();
     }
 }

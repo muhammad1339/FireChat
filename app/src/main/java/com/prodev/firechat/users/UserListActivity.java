@@ -11,6 +11,7 @@ import android.util.Log;
 import com.prodev.firechat.R;
 import com.prodev.firechat.chat.ChatActivity;
 import com.prodev.firechat.data.User;
+import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 
 import java.util.List;
 
@@ -24,9 +25,19 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
+        //have no action bar
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setupView();
         mPresenter = new UserListPresenter(this, this);
         mPresenter.getAllUsers();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intentRecentMessages = new Intent(this, RecentMessagesActivity.class);
+        intentRecentMessages.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intentRecentMessages);
     }
 
     private void setupView() {
@@ -52,7 +63,7 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
         // pass current clicked user Id or user to chat activity
         intent.putExtra("toID", user.getUid());
         intent.putExtra("toEmail", user.getUserMail());
-        intent.putExtra("toImageUrl",user.getUserImagePath());
+        intent.putExtra("toImageUrl", user.getUserImagePath());
         startActivity(intent);
     }
 }

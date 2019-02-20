@@ -78,7 +78,28 @@ public class ChatRepo {
         });
         return listMutableLiveData;
     }
-    public void getRecentMessagesForCurrentUser(){
-        
+
+    public LiveData<List<Chat>> getRecentMessagesForCurrentUser(String fromId) {
+        final MutableLiveData<List<Chat>> listMutableLiveData = new MutableLiveData<>();
+        DatabaseReference reference = mFirebaseDatabase.getReference(Constant.RECENT_MESSAGE_NODE)
+                .child(fromId);
+        Log.d(TAG, "getRecentMessagesForCurrentUser: "+fromId);
+        reference.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Chat> chatList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.d(TAG, "\n" + snapshot.getValue().toString());
+                    chatList.add(snapshot.getValue(Chat.class));
+                }
+                listMutableLiveData.postValue(chatList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        return listMutableLiveData;
     }
 }

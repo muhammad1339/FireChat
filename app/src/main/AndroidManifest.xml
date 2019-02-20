@@ -21,8 +21,20 @@
         </activity>
         <activity android:name=".recentmessages.RecentMessagesActivity" />
         <activity android:name=".register.RegisterActivity" />
-        <activity android:name=".chat.ChatActivity" />
-        <activity android:name=".users.UserListActivity"></activity>
+        <activity
+            android:name=".chat.ChatActivity"
+            android:parentActivityName=".recentmessages.RecentMessagesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".recentmessages.RecentMessagesActivity" />
+        </activity>
+        <activity
+            android:name=".users.UserListActivity"
+            android:parentActivityName=".recentmessages.RecentMessagesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".recentmessages.RecentMessagesActivity" />
+        </activity>
     </application>
 
 </manifest>

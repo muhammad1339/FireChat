@@ -1,6 +1,7 @@
 package com.prodev.firechat.chat;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,8 +16,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.prodev.firechat.Constant;
 import com.prodev.firechat.PrefManager;
 import com.prodev.firechat.R;
+import com.prodev.firechat.SplashActivity;
 import com.prodev.firechat.Utils;
 import com.prodev.firechat.data.Chat;
+import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 
 import java.util.Date;
 import java.util.List;
@@ -55,7 +58,11 @@ public class ChatActivity
         toEmail = intent.getStringExtra("toEmail");
         Toolbar toolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(toEmail);
+        ActionBar supportActionBar = getSupportActionBar();
+        supportActionBar.setDisplayHomeAsUpEnabled(true);
+        if (toEmail != null && supportActionBar != null) {
+            supportActionBar.setTitle(toEmail);
+        }
         long timeStamp = System.currentTimeMillis();
         Date date = new Date(timeStamp);
         Log.d(TAG, "onCreate: " + date.toString());
@@ -74,6 +81,14 @@ public class ChatActivity
             }
 
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intentRecentMessages = new Intent(this, RecentMessagesActivity.class);
+        intentRecentMessages.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intentRecentMessages);
     }
 
     private void configureView() {

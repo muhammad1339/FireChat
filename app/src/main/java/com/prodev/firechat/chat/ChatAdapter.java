@@ -42,6 +42,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
     public void setFromImageUrl(String fromImageUrl) {
         this.fromImageUrl = fromImageUrl;
     }
+
     @Override
     public int getItemViewType(int position) {
         Chat chat = chatList.get(position);
@@ -157,8 +158,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.BaseViewHolder
         }
 
         public void setImageViewToProfile(String imgUrl) {
-            Uri imgUri = Uri.parse(imgUrl);
-            Glide.with(itemView).load(imgUri).into(imageViewToProfile);
+            if (imgUrl != null) {
+                Uri imgUri = Uri.parse(imgUrl);
+                Glide.with(itemView).load(imgUri).into(imageViewToProfile);
+            }
         }
     }
 }

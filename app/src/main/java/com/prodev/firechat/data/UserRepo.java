@@ -165,7 +165,29 @@ public class UserRepo {
                 });
     }
 
-    public User getCurrentUser() {
-        return PrefManager.getUserObject(mContext, Constant.USER_NODE);
+    public LiveData<User> getUserWithId(String id) {
+        Log.d(TAG, "getUserWithId: ");
+        final MutableLiveData<User> userMutableLiveData = new MutableLiveData<>();
+        DatabaseReference reference = mFirebaseDatabase.getReference(Constant.USER_NODE);
+        reference.orderByChild("uid")
+                .equalTo(id)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            User user = snapshot.getValue(User.class);
+                            Log.d(TAG, "getUserWithId-onDataChange:\n " +
+                                    user.toString());
+                            userMutableLiveData.postValue(user);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.d(TAG, "getUserWithId-onCancelled:\n " + databaseError.getDetails());
+                    }
+                });
+        return userMutableLiveData;
     }
+
 }
