@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.prodev.firechat.Constant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ChatRepo {
@@ -92,6 +93,7 @@ public class ChatRepo {
                     Log.d(TAG, "\n" + snapshot.getValue().toString());
                     chatList.add(snapshot.getValue(Chat.class));
                 }
+                Collections.reverse(chatList);
                 listMutableLiveData.postValue(chatList);
             }
 

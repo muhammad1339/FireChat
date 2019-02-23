@@ -54,15 +54,15 @@ public class RecentMessagesAdapter extends RecyclerView.Adapter<RecentMessagesAd
             recentViewHolder.setUserRecentMsg(chat.getMsgContent());
             recentViewHolder.setUserRecentImage(user.getUserImagePath());
             recentViewHolder.setUserRecentName(user.getUserMail());
+            recentViewHolder.itemView.setOnClickListener(view -> {
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                // pass current clicked user Id or user to chat activity
+                intent.putExtra("toID", user.getUid());
+                intent.putExtra("toEmail", user.getUserMail());
+                intent.putExtra("toImageUrl", user.getUserImagePath());
+                mContext.startActivity(intent);
+            });
         }
-        recentViewHolder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(mContext, ChatActivity.class);
-            // pass current clicked user Id or user to chat activity
-            intent.putExtra("toID", user.getUid());
-            intent.putExtra("toEmail", user.getUserMail());
-            intent.putExtra("toImageUrl", user.getUserImagePath());
-            mContext.startActivity(intent);
-        });
     }
 
     @Override

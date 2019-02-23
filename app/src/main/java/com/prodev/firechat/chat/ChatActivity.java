@@ -87,7 +87,6 @@ public class ChatActivity
     public void onBackPressed() {
         super.onBackPressed();
         Intent intentRecentMessages = new Intent(this, RecentMessagesActivity.class);
-        intentRecentMessages.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intentRecentMessages);
     }
 
