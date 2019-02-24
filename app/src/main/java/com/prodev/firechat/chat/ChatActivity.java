@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ public class ChatActivity
     private ImageButton btnSendMsg;
     private ChatPresenter mPresenter;
     private RecyclerView recyclerViewChatList;
+    private View chatLoadingLayout;
     private ChatAdapter chatAdapter;
     private String toID;
     private String fromID;
@@ -47,6 +49,7 @@ public class ChatActivity
         fromID = FirebaseAuth.getInstance().getUid();
         mPresenter = new ChatPresenter(this, this);
         mPresenter.getChatMessages(fromID, toID);
+        Log.d(TAG, "onStart: "+fromID);
     }
 
     @Override
@@ -91,6 +94,7 @@ public class ChatActivity
     }
 
     private void configureView() {
+        chatLoadingLayout = findViewById(R.id.chat_loading_layout);
         editTextChatContent = findViewById(R.id.editText_message_content);
         btnSendMsg = findViewById(R.id.imageButton_send_message);
         recyclerViewChatList = findViewById(R.id.recycler_view_chat_list);
@@ -105,5 +109,19 @@ public class ChatActivity
         chatAdapter.setFromImageUrl(PrefManager.getUserObject(this, Constant.USER_NODE).getUserImagePath());
         recyclerViewChatList.setAdapter(chatAdapter);
         recyclerViewChatList.scrollToPosition(chatAdapter.getItemCount() - 1);
+    }
+
+    @Override
+    public void onStartLoadingChat() {
+        chatLoadingLayout.setVisibility(View.VISIBLE);
+        recyclerViewChatList.setVisibility(View.GONE);
+        Log.d(TAG, "onStartLoadingChat: ");
+    }
+
+    @Override
+    public void onFinishLoadingChat() {
+        Log.d(TAG, "onFinishLoadingChat: ");
+        recyclerViewChatList.setVisibility(View.VISIBLE);
+        chatLoadingLayout.setVisibility(View.GONE);
     }
 }

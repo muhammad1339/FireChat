@@ -44,14 +44,14 @@ public class UserRepo {
         mContext = context;
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        repoSignUpCallback = (UserRepoCallback.UserRepoSignUpCallback) presenter;
+        repoSignUpCallback = presenter;
     }
 
     public UserRepo(LoginPresenter presenter, Context context) {
         mContext = context;
         mAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        repoLoginCallback = (UserRepoCallback.UserRepoLoginCallback) presenter;
+        repoLoginCallback = presenter;
     }
 
     public void signUpWithEmailAndPassword(final User user, Uri imagePath) {

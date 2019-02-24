@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,6 +37,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".recentmessages.RecentMessagesActivity" />
         </activity>
+
+        <service
+            android:name=".services.CheckLoginService"
+            android:process=":MyProcess" />
     </application>
 
 </manifest>

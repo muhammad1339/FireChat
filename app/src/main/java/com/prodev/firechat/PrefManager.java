@@ -33,12 +33,21 @@ public class PrefManager {
         Gson gson = new Gson();
         String userJson = sharedPreferences.getString(key, "");
         GenericObject<User> userGenericObject = gson.fromJson(userJson, type);
+        if (userGenericObject == null) {
+            return null;
+        }
         return userGenericObject.getObject();
     }
 
+    public static void storeString(Context context, String key, String value) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE, Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString(key, value).apply();
+    }
 
-
-
+    public static String getStoredString(Context context, String key) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(key, null);
+    }
 
     public static void clearPref(Context context, String key) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREF_FILE, Context.MODE_PRIVATE);

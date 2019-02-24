@@ -9,6 +9,8 @@ import java.util.Map;
 public interface RecentMessagesContract {
     interface RecentMessagesView {
         void populateRecentMessages(Map<Chat, User> chatUserMap, List<Chat> chatList);
+        void onStartLoadingChat();
+        void onFinishLoadingChat();
     }
 
     interface RecentMessagesPresenter {

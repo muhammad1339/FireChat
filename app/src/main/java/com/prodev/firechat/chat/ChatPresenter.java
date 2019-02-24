@@ -7,16 +7,17 @@ import android.support.annotation.Nullable;
 
 import com.prodev.firechat.data.Chat;
 import com.prodev.firechat.data.ChatRepo;
+import com.prodev.firechat.data.ChatRepoCallback;
 
 import java.util.List;
 
-public class ChatPresenter implements ChatContract.ChatPresenter {
+public class ChatPresenter implements ChatContract.ChatPresenter, ChatRepoCallback {
     private ChatRepo mRepo;
     private ChatContract.ChatView mChatView;
     private LifecycleOwner lifecycleOwner;
 
     public ChatPresenter(LifecycleOwner owner, Context context) {
-        mRepo = new ChatRepo();
+        mRepo = new ChatRepo(this);
         mChatView = (ChatContract.ChatView) context;
         lifecycleOwner = owner;
     }
@@ -30,5 +31,15 @@ public class ChatPresenter implements ChatContract.ChatPresenter {
         mRepo.getChatMessages(fromID, toID).observe(lifecycleOwner, chats -> {
             mChatView.populateListWithMessages(chats);
         });
+    }
+
+    @Override
+    public void onStartLoadingChat() {
+        mChatView.onStartLoadingChat();
+    }
+
+    @Override
+    public void onFinishLoadingChat() {
+        mChatView.onFinishLoadingChat();
     }
 }

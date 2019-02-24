@@ -27,6 +27,7 @@ public class RecentMessagesFragment extends Fragment implements RecentMessagesCo
     private Context mContext;
     private RecyclerView recyclerViewRecentMessages;
     private RecentMessagesPresenter mPresenter;
+    private View recentMessageLoadingLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -51,6 +52,7 @@ public class RecentMessagesFragment extends Fragment implements RecentMessagesCo
     }
 
     private void configureViews(View view) {
+        recentMessageLoadingLayout = view.findViewById(R.id.recent_messages_loading_layout);
         recyclerViewRecentMessages = view.findViewById(R.id.recycler_view_recent_messages);
         recyclerViewRecentMessages.setHasFixedSize(true);
         recyclerViewRecentMessages.setItemAnimator(new DefaultItemAnimator());
@@ -59,8 +61,20 @@ public class RecentMessagesFragment extends Fragment implements RecentMessagesCo
 
     @Override
     public void populateRecentMessages(Map<Chat, User> chatUserMap, List<Chat> chatList) {
-        Log.d(TAG, "populateRecentMessages: "+chatUserMap.size());
+        Log.d(TAG, "populateRecentMessages: " + chatUserMap.size());
         RecentMessagesAdapter adapter = new RecentMessagesAdapter(mContext, chatUserMap, chatList);
         recyclerViewRecentMessages.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStartLoadingChat() {
+        recentMessageLoadingLayout.setVisibility(View.VISIBLE);
+        recyclerViewRecentMessages.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFinishLoadingChat() {
+        recentMessageLoadingLayout.setVisibility(View.GONE);
+        recyclerViewRecentMessages.setVisibility(View.VISIBLE);
     }
 }
