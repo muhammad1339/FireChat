@@ -1,8 +1,7 @@
-package com.prodev.firechat.data;
+package com.prodev.firechat.data.chat;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -11,8 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.prodev.firechat.Constant;
 import com.prodev.firechat.chat.ChatPresenter;
+import com.prodev.firechat.data.Constant;
 import com.prodev.firechat.recentmessages.RecentMessagesPresenter;
 
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class ChatRepo {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         chatRepoCallback = chatPresenter;
     }
+
     public ChatRepo(RecentMessagesPresenter recentMessagesPresenter) {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         chatRepoCallback = recentMessagesPresenter;
@@ -47,10 +47,10 @@ public class ChatRepo {
                 .child(chat.getFromID()).push();
         chat.setMsgID(fromRef.getKey());
         fromRef.setValue(chat).addOnSuccessListener(aVoid -> {
-            Log.d(TAG, "storeUserChat: ");
+            Log.d(TAG, "storeUserChat: " + chat.toString());
         }).addOnFailureListener(Throwable::printStackTrace);
         toRef.setValue(chat).addOnSuccessListener(aVoid -> {
-            Log.d(TAG, "storeUserChat: ");
+            Log.d(TAG, "storeUserChat: " + chat.toString());
         }).addOnFailureListener(Throwable::printStackTrace);
         storeRecentUserChat(chat);
     }
@@ -75,12 +75,12 @@ public class ChatRepo {
         chatRepoCallback.onStartLoadingChat();
         final MutableLiveData<List<Chat>> listMutableLiveData = new MutableLiveData<>();
         final DatabaseReference reference = mFirebaseDatabase.getReference(Constant.CHAT_NODE);
-        reference.child(fromId).child(toId).addValueEventListener(new ValueEventListener() {
+        DatabaseReference child = reference.child(fromId).child(toId);
+        child.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Chat> chatList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "\n" + snapshot.getValue().toString());
                     chatList.add(snapshot.getValue(Chat.class));
                 }
                 listMutableLiveData.postValue(chatList);
@@ -90,6 +90,7 @@ public class ChatRepo {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 chatRepoCallback.onFinishLoadingChat();
+                Log.d(TAG, "onCancelled: " + databaseError.getMessage());
             }
         });
         return listMutableLiveData;
@@ -100,13 +101,11 @@ public class ChatRepo {
         final MutableLiveData<List<Chat>> listMutableLiveData = new MutableLiveData<>();
         DatabaseReference reference = mFirebaseDatabase.getReference(Constant.RECENT_MESSAGE_NODE)
                 .child(fromId);
-        Log.d(TAG, "getRecentMessagesForCurrentUser: " + fromId);
         reference.orderByChild("timeStamp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Chat> chatList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d(TAG, "\n" + snapshot.getValue().toString());
                     chatList.add(snapshot.getValue(Chat.class));
                 }
                 Collections.reverse(chatList);
@@ -117,6 +116,7 @@ public class ChatRepo {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 chatRepoCallback.onFinishLoadingChat();
+                Log.d(TAG, "onCancelled: " + databaseError.getMessage());
             }
         });
         return listMutableLiveData;

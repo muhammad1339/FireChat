@@ -3,6 +3,8 @@
     package="com.prodev.firechat">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -38,9 +40,9 @@
                 android:value=".recentmessages.RecentMessagesActivity" />
         </activity>
 
-        <service
-            android:name=".services.CheckLoginService"
-            android:process=":MyProcess" />
+        <receiver
+            android:name=".services.NetworkReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.prodev.firechat.chat;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,14 +14,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.prodev.firechat.Constant;
-import com.prodev.firechat.PrefManager;
+import com.prodev.firechat.data.Constant;
+import com.prodev.firechat.data.PrefManager;
 import com.prodev.firechat.R;
-import com.prodev.firechat.SplashActivity;
-import com.prodev.firechat.Utils;
-import com.prodev.firechat.data.Chat;
+import com.prodev.firechat.services.NetworkReceiver;
+import com.prodev.firechat.utils.FunctionUtils;
+import com.prodev.firechat.utils.ViewUtils;
+import com.prodev.firechat.data.chat.Chat;
 import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 
 import java.util.Date;
@@ -27,7 +31,8 @@ import java.util.List;
 
 public class ChatActivity
         extends AppCompatActivity
-        implements ChatContract.ChatView {
+        implements ChatContract.ChatView
+        , NetworkReceiver.NetworkCallback {
     public static final String TAG = ChatActivity.class.getSimpleName();
     private EditText editTextChatContent;
     private ImageButton btnSendMsg;
@@ -41,24 +46,12 @@ public class ChatActivity
     private String toEmail;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = getIntent();
-        toID = intent.getStringExtra("toID");
-        toImageUrl = intent.getStringExtra("toImageUrl");
-        fromID = FirebaseAuth.getInstance().getUid();
-        mPresenter = new ChatPresenter(this, this);
-        mPresenter.getChatMessages(fromID, toID);
-        Log.d(TAG, "onStart: "+fromID);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        registerReceiver(new NetworkReceiver(this), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         configureView();
-        Intent intent = getIntent();
-        toEmail = intent.getStringExtra("toEmail");
+        receiveIntentData();
         Toolbar toolbar = findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
         ActionBar supportActionBar = getSupportActionBar();
@@ -72,7 +65,7 @@ public class ChatActivity
         btnSendMsg.setOnClickListener(view -> {
             String msg = editTextChatContent.getText().toString();
             if (TextUtils.isEmpty(msg)) {
-                Utils.showToast(this, "Message is empty");
+                ViewUtils.showToast(this, "Message is empty");
             } else {
                 Chat chat = new Chat("", fromID, toID, msg, timeStamp);
                 editTextChatContent.setText("");
@@ -82,7 +75,6 @@ public class ChatActivity
                     recyclerViewChatList.scrollToPosition(chatAdapter.getItemCount());
                 }
             }
-
         });
     }
 
@@ -100,6 +92,16 @@ public class ChatActivity
         recyclerViewChatList = findViewById(R.id.recycler_view_chat_list);
         recyclerViewChatList.setHasFixedSize(true);
         recyclerViewChatList.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    private void receiveIntentData() {
+        Intent intent = getIntent();
+        toID = intent.getStringExtra("toID");
+        toImageUrl = intent.getStringExtra("toImageUrl");
+        fromID = FirebaseAuth.getInstance().getUid();
+        mPresenter = new ChatPresenter(this, this);
+        mPresenter.getChatMessages(fromID, toID);
+        toEmail = intent.getStringExtra("toEmail");
     }
 
     @Override
@@ -123,5 +125,17 @@ public class ChatActivity
         Log.d(TAG, "onFinishLoadingChat: ");
         recyclerViewChatList.setVisibility(View.VISIBLE);
         chatLoadingLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onNetworkConnected() {
+        TextView chatNoNetworkLayout = findViewById(R.id.chat_no_network_layout);
+        ViewUtils.showOnlineState(this,chatNoNetworkLayout);
+    }
+
+    @Override
+    public void onNetworkDisconnected() {
+        TextView chatNoNetworkLayout = findViewById(R.id.chat_no_network_layout);
+        ViewUtils.showOnlineState(this,chatNoNetworkLayout);
     }
 }

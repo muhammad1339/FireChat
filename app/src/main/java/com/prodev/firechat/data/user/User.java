@@ -1,4 +1,4 @@
-package com.prodev.firechat.data;
+package com.prodev.firechat.data.user;
 
 import android.net.Uri;
 

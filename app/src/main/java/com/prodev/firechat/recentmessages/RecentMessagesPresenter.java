@@ -1,22 +1,17 @@
 package com.prodev.firechat.recentmessages;
 
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.prodev.firechat.data.Chat;
-import com.prodev.firechat.data.ChatRepo;
-import com.prodev.firechat.data.ChatRepoCallback;
-import com.prodev.firechat.data.User;
-import com.prodev.firechat.data.UserRepo;
+import com.prodev.firechat.data.chat.Chat;
+import com.prodev.firechat.data.chat.ChatRepo;
+import com.prodev.firechat.data.chat.ChatRepoCallback;
+import com.prodev.firechat.data.user.User;
+import com.prodev.firechat.data.user.UserRepo;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.prodev.firechat.data.ChatRepo.TAG;
 
 
 public class RecentMessagesPresenter implements ChatRepoCallback {

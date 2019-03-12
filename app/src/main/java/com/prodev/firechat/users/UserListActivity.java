@@ -1,6 +1,8 @@
 package com.prodev.firechat.users;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,12 +12,17 @@ import android.util.Log;
 
 import com.prodev.firechat.R;
 import com.prodev.firechat.chat.ChatActivity;
-import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.user.User;
 import com.prodev.firechat.recentmessages.RecentMessagesActivity;
+import com.prodev.firechat.services.NetworkReceiver;
+import com.prodev.firechat.utils.FunctionUtils;
+import com.prodev.firechat.utils.ViewUtils;
 
 import java.util.List;
 
-public class UserListActivity extends AppCompatActivity implements UserListContract.UserListView {
+public class UserListActivity extends AppCompatActivity
+        implements UserListContract.UserListView
+        , NetworkReceiver.NetworkCallback {
     public static final String TAG = UserListActivity.class.getSimpleName();
     private RecyclerView mRecyclerViewUserList;
     private UserListPresenter mPresenter;
@@ -27,6 +34,7 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
         setContentView(R.layout.activity_user_list);
         //have no action bar
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        registerReceiver(new NetworkReceiver(this),new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         setupView();
         mPresenter = new UserListPresenter(this, this);
         mPresenter.getAllUsers();
@@ -64,5 +72,15 @@ public class UserListActivity extends AppCompatActivity implements UserListContr
         intent.putExtra("toEmail", user.getUserMail());
         intent.putExtra("toImageUrl", user.getUserImagePath());
         startActivity(intent);
+    }
+
+    @Override
+    public void onNetworkConnected() {
+
+    }
+
+    @Override
+    public void onNetworkDisconnected() {
+
     }
 }

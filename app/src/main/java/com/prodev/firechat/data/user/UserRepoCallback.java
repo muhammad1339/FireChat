@@ -1,4 +1,4 @@
-package com.prodev.firechat.data;
+package com.prodev.firechat.data.user;
 
 public interface UserRepoCallback {
 
@@ -7,9 +7,9 @@ public interface UserRepoCallback {
 
         void onLoginFailure(String message);
 
-        void onStartLoading();
+        void onStartUserLogin();
 
-        void onEndLoading();
+        void onEndUserLogin();
     }
 
     interface UserRepoSignUpCallback {
@@ -17,8 +17,8 @@ public interface UserRepoCallback {
 
         void onSignUpFailure(String message);
 
-        void onStartLoading();
+        void onStartUserSignUp();
 
-        void onEndLoading();
+        void onEndUserSignUp();
     }
 }

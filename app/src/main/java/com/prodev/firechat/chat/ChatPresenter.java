@@ -1,15 +1,11 @@
 package com.prodev.firechat.chat;
 
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.Nullable;
 
-import com.prodev.firechat.data.Chat;
-import com.prodev.firechat.data.ChatRepo;
-import com.prodev.firechat.data.ChatRepoCallback;
-
-import java.util.List;
+import com.prodev.firechat.data.chat.Chat;
+import com.prodev.firechat.data.chat.ChatRepo;
+import com.prodev.firechat.data.chat.ChatRepoCallback;
 
 public class ChatPresenter implements ChatContract.ChatPresenter, ChatRepoCallback {
     private ChatRepo mRepo;

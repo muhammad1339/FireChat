@@ -1,24 +1,33 @@
 package com.prodev.firechat;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.Constant;
+import com.prodev.firechat.data.PrefManager;
+import com.prodev.firechat.data.user.User;
 import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 import com.prodev.firechat.register.RegisterActivity;
-import com.prodev.firechat.services.CheckLoginService;
+import com.prodev.firechat.services.NetworkReceiver;
+import com.prodev.firechat.utils.FunctionUtils;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements NetworkReceiver.NetworkCallback {
     public static final String TAG = SplashActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.SplashScreenTheme);
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_splash);
+        registerReceiver(new NetworkReceiver(this), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+    }
+
+    @Override
+    public void onNetworkConnected() {
         User userObject = PrefManager.getUserObject(SplashActivity.this, Constant.USER_NODE);
         if (userObject == null) {
             Intent intentRegister = new Intent(SplashActivity.this, RegisterActivity.class);
@@ -31,4 +40,8 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onNetworkDisconnected() {
+
+    }
 }

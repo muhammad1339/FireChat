@@ -1,6 +1,6 @@
 package com.prodev.firechat.chat;
 
-import com.prodev.firechat.data.Chat;
+import com.prodev.firechat.data.chat.Chat;
 
 import java.util.List;
 

@@ -15,13 +15,13 @@ import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.prodev.firechat.R;
-import com.prodev.firechat.data.Chat;
-import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.chat.Chat;
+import com.prodev.firechat.data.user.User;
 
 import java.util.List;
 import java.util.Map;
 
-import static com.prodev.firechat.data.ChatRepo.TAG;
+import static com.prodev.firechat.data.chat.ChatRepo.TAG;
 
 public class RecentMessagesFragment extends Fragment implements RecentMessagesContract.RecentMessagesView {
     private Context mContext;

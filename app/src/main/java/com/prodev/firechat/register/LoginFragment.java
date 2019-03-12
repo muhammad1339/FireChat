@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.prodev.firechat.R;
-import com.prodev.firechat.Utils;
 import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 
 

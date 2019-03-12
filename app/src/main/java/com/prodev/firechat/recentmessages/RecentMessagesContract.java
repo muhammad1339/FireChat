@@ -1,7 +1,7 @@
 package com.prodev.firechat.recentmessages;
 
-import com.prodev.firechat.data.Chat;
-import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.chat.Chat;
+import com.prodev.firechat.data.user.User;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.prodev.firechat.data;
+package com.prodev.firechat.data.chat;
 
 public class Chat {
     private String msgID;

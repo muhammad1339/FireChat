@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.prodev.firechat.R;
-import com.prodev.firechat.data.Chat;
+import com.prodev.firechat.data.chat.Chat;
 
 import java.util.List;
 

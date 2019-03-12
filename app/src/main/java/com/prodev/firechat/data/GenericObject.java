@@ -1,4 +1,4 @@
-package com.prodev.firechat;
+package com.prodev.firechat.data;
 
 public class GenericObject<T> {
     private T object;

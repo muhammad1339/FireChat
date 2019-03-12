@@ -14,4 +14,6 @@
     <string name="recent_msg_empty">World is Better when we talk to each other</string>
     <string name="test">World is Better when we talk to each other
     </string>
+    <string name="no_network">No Network</string>
+    <string name="back_online">Back Online</string>
 </resources>

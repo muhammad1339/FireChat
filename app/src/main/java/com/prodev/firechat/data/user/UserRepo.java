@@ -1,4 +1,4 @@
-package com.prodev.firechat.data;
+package com.prodev.firechat.data.user;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -16,8 +15,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.prodev.firechat.Constant;
-import com.prodev.firechat.PrefManager;
+import com.prodev.firechat.data.Constant;
+import com.prodev.firechat.data.PrefManager;
 import com.prodev.firechat.register.LoginPresenter;
 import com.prodev.firechat.register.SignUpPresenter;
 
@@ -56,7 +55,7 @@ public class UserRepo {
 
     public void signUpWithEmailAndPassword(final User user, Uri imagePath) {
         this.imageUploadUri = imagePath;
-        repoSignUpCallback.onStartLoading();
+        repoSignUpCallback.onStartUserSignUp();
         mAuth.createUserWithEmailAndPassword(user.getUserMail(), user.getUserPassword())
                 .addOnCompleteListener(task -> Log.d(TAG, "signUpWithEmailAndPassword-onComplete: " + task.isComplete()))
                 .addOnSuccessListener(authResult -> {
@@ -66,30 +65,30 @@ public class UserRepo {
                     storeUserWithEmailAndPassword(user);
                     // notify presenter to change view
                     repoSignUpCallback.onSignUpSuccess();
-                    repoSignUpCallback.onEndLoading();
+                    repoSignUpCallback.onEndUserSignUp();
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "signUpWithEmailAndPassword-onFailure: " + e.getMessage());
                     repoSignUpCallback.onSignUpFailure(e.getMessage());
-                    repoSignUpCallback.onEndLoading();
+                    repoSignUpCallback.onEndUserSignUp();
                 });
     }
 
     public void loginUserWithEmailAndPassword(User user) {
-        repoLoginCallback.onStartLoading();
+        repoLoginCallback.onStartUserLogin();
         mAuth.signInWithEmailAndPassword(user.getUserMail(), user.getUserPassword())
                 .addOnCompleteListener(task -> Log.d(TAG, "loginUserWithEmailAndPassword-onComplete: " + task.isComplete()))
                 .addOnSuccessListener(authResult -> {
                     Log.d(TAG, "loginUserWithEmailAndPassword-onSuccess: " + authResult.getUser().getUid());
                     // notify presenter to change view
                     repoLoginCallback.onLoginSuccess();
-                    repoLoginCallback.onEndLoading();
+                    repoLoginCallback.onEndUserLogin();
                     getUserWithEmail(user.getUserMail());
                 })
                 .addOnFailureListener(e -> {
                     Log.d(TAG, "loginUserWithEmailAndPassword-onFailure: " + e.getMessage());
                     repoLoginCallback.onLoginFailure(e.getMessage());
-                    repoLoginCallback.onEndLoading();
+                    repoLoginCallback.onEndUserLogin();
                 });
     }
 

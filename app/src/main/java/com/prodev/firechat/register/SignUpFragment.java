@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.prodev.firechat.R;
-import com.prodev.firechat.Utils;
+import com.prodev.firechat.utils.ViewUtils;
 import com.prodev.firechat.recentmessages.RecentMessagesActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -104,7 +104,7 @@ public class SignUpFragment extends Fragment implements RegisterContract.Registe
         }
         if (mUri == null) {
             String msg = "Please ,Select Image Profile";
-            Utils.showToast(mContext, msg);
+            ViewUtils.showToast(mContext, msg);
             return;
         }
         mSignUpPresenter.saveUser("", userMail

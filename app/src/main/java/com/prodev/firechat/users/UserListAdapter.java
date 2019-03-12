@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.prodev.firechat.R;
-import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.user.User;
 
 import java.util.List;
 

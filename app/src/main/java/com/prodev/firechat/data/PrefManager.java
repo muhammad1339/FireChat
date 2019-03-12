@@ -1,17 +1,13 @@
-package com.prodev.firechat;
+package com.prodev.firechat.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.prodev.firechat.R;
-import com.prodev.firechat.data.User;
+import com.prodev.firechat.data.user.User;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PrefManager {
 

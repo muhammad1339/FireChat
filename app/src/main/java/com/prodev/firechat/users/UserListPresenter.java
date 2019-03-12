@@ -1,14 +1,9 @@
 package com.prodev.firechat.users;
 
 import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.support.annotation.Nullable;
 
-import com.prodev.firechat.data.User;
-import com.prodev.firechat.data.UserRepo;
-
-import java.util.List;
+import com.prodev.firechat.data.user.UserRepo;
 
 public class UserListPresenter implements UserListContract.UserListPresenter {
     private UserRepo mRepo;

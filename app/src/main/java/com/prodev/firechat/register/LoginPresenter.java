@@ -1,11 +1,8 @@
 package com.prodev.firechat.register;
 
-import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
-
-import com.prodev.firechat.data.User;
-import com.prodev.firechat.data.UserRepo;
-import com.prodev.firechat.data.UserRepoCallback;
+import com.prodev.firechat.data.user.User;
+import com.prodev.firechat.data.user.UserRepo;
+import com.prodev.firechat.data.user.UserRepoCallback;
 
 public class LoginPresenter
         implements RegisterContract.LoginPresenter
@@ -30,12 +27,12 @@ public class LoginPresenter
     }
 
     @Override
-    public void onStartLoading() {
+    public void onStartUserLogin() {
         mRegisterViewLogin.onStartLoading();
     }
 
     @Override
-    public void onEndLoading() {
+    public void onEndUserLogin() {
         mRegisterViewLogin.onEndLoading();
     }
 
